@@ -1,15 +1,68 @@
 let $start = document.querySelector('#start')
 let $game = document.querySelector('#game')
+let $time = document.querySelector('#time')
+let $result = document.querySelector('#result')
+let $timeHeader = document.querySelector('#time-header')
+let $resultHeader = document.querySelector('#result-header')
+let $gameTime = document.querySelector('#game-time')
+
 let score = 0
+let isGameStarted = false
 
 $start.addEventListener('click', startGame)
 $game.addEventListener('click', handleBoxClick)
+$gameTime.addEventListener('input', setGameTime)
+
 function startGame() {
+    score = 0
+    setGameTime()
+    // заблокировать инпут во время игры
+    $gameTime.setAttribute('disabled', 'true')
+    $timeHeader.classList.remove('hide')
+    $resultHeader.classList.add('hide')
+
+    isGameStarted = true
     $game.style.backgroundColor = '#fff'
     $start.classList.add('hide')
+
+    //---запуск интервала  (таймер)
+    let interval = setInterval(function() {
+        let time = parseFloat($time.textContent)
+        
+        if(time <=0) {
+            //end game
+            clearInterval(interval)
+            endGame()
+        } else {
+            $time.textContent = (time - 0.1).toFixed(1)
+        }
+    }, 100)
+    //--------
     renderBox()
 }
+
+function setGameScore() {
+    $result.textContent = score.toString()
+}
+function setGameTime() {
+    var time = +$gameTime.value // или parseInt или + чтоб привести к числу
+    $time.textContent = time.toFixed(1)
+}
+function endGame() {
+
+    isGameStarted = false
+    setGameScore()
+    $gameTime.removeAttribute('disabled')
+    $start.classList.remove('hide')
+    $game.innerHTML = ''
+    $game.style.backgroundColor = '#ccc'
+    $timeHeader.classList.add('hide')
+    $resultHeader.classList.remove('hide')
+}
 function handleBoxClick(event) {
+    if(!isGameStarted) {
+        return
+    }
     if(event.target.dataset.box) {
         score++
         renderBox()
@@ -19,7 +72,7 @@ function renderBox() {
     
     $game.innerHTML = ''
     let box = document.createElement('div')
-    let boxSize = getRandom(30, 100)
+    let boxSize = getRandom(25, 80)
     //------вычислить поле бокс в котором квадрат ----
     let gameSize = $game.getBoundingClientRect()
     let maxTop = gameSize.height - boxSize
