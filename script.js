@@ -5,7 +5,7 @@ let $result = document.querySelector('#result')
 let $timeHeader = document.querySelector('#time-header')
 let $resultHeader = document.querySelector('#result-header')
 let $gameTime = document.querySelector('#game-time')
-
+let boxColors = ['#CB356B', '#BD3F32', '#3A1C71', '#D76D77', '#283c86', '#45a247', '#8e44ad', '#155799', '#159957', '#000046', '#1CB5E0', '#2F80ED']
 let score = 0
 let isGameStarted = false
 
@@ -83,10 +83,11 @@ function renderBox() {
     let maxTop = gameSize.height - boxSize
     let maxLeft = gameSize.width - boxSize
     //------------------------------------------------
+    let randomBoxColor = getRandom(0, boxColors.length)
     box.style.height = box.style.width = boxSize + 'px'
 
     box.style.position = 'absolute'
-    box.style.backgroundColor = '#000'
+    box.style.backgroundColor = boxColors[randomBoxColor]
     box.style.top = getRandom(0, maxTop) + 'px'
     box.style.left = getRandom(0, maxLeft) + 'px'
     box.style.cursor = 'pointer'
